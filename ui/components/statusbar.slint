@@ -1,0 +1,123 @@
+// Barra de status inferior
+export component StatusBar inherits Rectangle {
+    height: 28px;
+    background: #34495e;
+    
+    // Propriedades
+    in property <string> coordinates: "X: 0.00 Y: 0.00";
+    in property <string> scale: "1:1000";
+    in property <string> crs: "EPSG:4326";
+    in property <string> message: "Pronto";
+    
+    HorizontalLayout {
+        padding-left: 12px;
+        padding-right: 12px;
+        padding-top: 6px;
+        padding-bottom: 2px;
+        spacing: 16px;
+        
+        // Mensagem principal
+        HorizontalLayout {
+            spacing: 8px;
+            horizontal-stretch: 1;
+            alignment: center;
+            
+            Image {
+                source: @image-url("../../images/themes/default/mIconSuccess.svg");
+                width: 14px;
+                height: 14px;
+                visible: root.message == "Pronto";
+            }
+            
+            Text {
+                text: root.message;
+                color: #ecf0f1;
+                font-size: 12px;
+            }
+        }
+        
+        // Separador
+        Rectangle {
+            width: 1px;
+            height: 20px;
+            background: #566573;
+        }
+        
+        // Coordenadas
+        HorizontalLayout {
+            spacing: 6px;
+            alignment: center;
+            
+            Image {
+                source: @image-url("../../images/themes/default/mActionMapTips.svg");
+                width: 14px;
+                height: 14px;
+            }
+            
+            Text {
+                text: root.coordinates;
+                color: #ecf0f1;
+                font-size: 11px;
+                font-family: "Consolas, monospace";
+            }
+        }
+        
+        // Separador
+        Rectangle {
+            width: 1px;
+            height: 20px;
+            background: #566573;
+        }
+        
+        // Escala
+        HorizontalLayout {
+            spacing: 6px;
+            alignment: center;
+            
+            Image {
+                source: @image-url("../../images/themes/default/mActionMeasure.svg");
+                width: 14px;
+                height: 14px;
+            }
+            
+            Text {
+                text: root.scale;
+                color: #ecf0f1;
+                font-size: 11px;
+            }
+        }
+        
+        // Separador
+        Rectangle {
+            width: 1px;
+            height: 20px;
+            background: #566573;
+        }
+        
+        // Sistema de Coordenadas
+        HorizontalLayout {
+            spacing: 6px;
+            alignment: center;
+            
+            Image {
+                source: @image-url("../../images/themes/default/mIconProjectionEnabled.svg");
+                width: 14px;
+                height: 14px;
+            }
+            
+            Text {
+                text: root.crs;
+                color: #ecf0f1;
+                font-size: 11px;
+            }
+        }
+    }
+    
+    // Linha superior
+    Rectangle {
+        y: 0;
+        height: 1px;
+        background: #566573;
+    }
+}
+

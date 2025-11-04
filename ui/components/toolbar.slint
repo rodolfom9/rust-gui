@@ -1,0 +1,240 @@
+// Componente de botão da toolbar
+component ToolButton inherits Rectangle {
+    in property <image> icon;
+    in property <string> tooltip;
+    
+    callback clicked();
+    
+    width: 36px;
+    height: 36px;
+    border-radius: 4px;
+    
+    states [
+        hover when touch-area.has-hover: {
+            background: #e8f4f8;
+        }
+        pressed when touch-area.pressed: {
+            background: #d0e8f0;
+        }
+    ]
+    
+    touch-area := TouchArea {
+        clicked => { root.clicked(); }
+    }
+    
+    Image {
+        source: root.icon;
+        width: 24px;
+        height: 24px;
+        x: (parent.width - self.width) / 2;
+        y: (parent.height - self.height) / 2;
+    }
+}
+
+// Toolbar com ações rápidas
+export component ToolBar inherits Rectangle {
+    height: 48px;
+    background: #ffffff;
+    
+    // Callbacks para ações
+    callback new-project();
+    callback open-project();
+    callback save-project();
+    callback undo();
+    callback redo();
+    callback zoom-in();
+    callback zoom-out();
+    callback zoom-extent();
+    callback pan();
+    callback select();
+    callback measure();
+    callback draw-point();
+    callback draw-line();
+    callback draw-polygon();
+    
+    HorizontalLayout {
+        padding: 8px;
+        spacing: 4px;
+        
+        // Grupo: Arquivo
+        ToolButton {
+            icon: @image-url("../../images/themes/default/mActionFileNew.svg");
+            tooltip: "Novo Projeto (Ctrl+N)";
+            clicked => { root.new-project(); }
+        }
+        
+        ToolButton {
+            icon: @image-url("../../images/themes/default/mActionFileOpen.svg");
+            tooltip: "Abrir Projeto (Ctrl+O)";
+            clicked => { root.open-project(); }
+        }
+        
+        ToolButton {
+            icon: @image-url("../../images/themes/default/mActionFileSave.svg");
+            tooltip: "Salvar Projeto (Ctrl+S)";
+            clicked => { root.save-project(); }
+        }
+        
+        // Separador
+        Rectangle {
+            width: 1px;
+            background: #e0e0e0;
+            vertical-stretch: 1;
+        }
+        
+        // Grupo: Editar
+        ToolButton {
+            icon: @image-url("../../images/themes/default/mActionUndo.svg");
+            tooltip: "Desfazer (Ctrl+Z)";
+            clicked => { root.undo(); }
+        }
+        
+        ToolButton {
+            icon: @image-url("../../images/themes/default/mActionRedo.svg");
+            tooltip: "Refazer (Ctrl+Y)";
+            clicked => { root.redo(); }
+        }
+        
+        // Separador
+        Rectangle {
+            width: 1px;
+            background: #e0e0e0;
+            vertical-stretch: 1;
+        }
+        
+        // Grupo: Visualização
+        ToolButton {
+            icon: @image-url("../../images/themes/default/mActionZoomIn.svg");
+            tooltip: "Aproximar Zoom (Ctrl++)";
+            clicked => { root.zoom-in(); }
+        }
+        
+        ToolButton {
+            icon: @image-url("../../images/themes/default/mActionZoomOut.svg");
+            tooltip: "Reduzir Zoom (Ctrl+-)";
+            clicked => { root.zoom-out(); }
+        }
+        
+        ToolButton {
+            icon: @image-url("../../images/themes/default/mActionZoomFullExtent.svg");
+            tooltip: "Zoom Extend (Ctrl+0)";
+            clicked => { root.zoom-extent(); }
+        }
+        
+        ToolButton {
+            icon: @image-url("../../images/themes/default/mActionPan.svg");
+            tooltip: "Pan (Arrastar Mapa)";
+            clicked => { root.pan(); }
+        }
+        
+        // Separador
+        Rectangle {
+            width: 1px;
+            background: #e0e0e0;
+            vertical-stretch: 1;
+        }
+        
+        // Grupo: Seleção e Medição
+        ToolButton {
+            icon: @image-url("../../images/themes/default/mActionSelectRectangle.svg");
+            tooltip: "Selecionar Feições";
+            clicked => { root.select(); }
+        }
+        
+        ToolButton {
+            icon: @image-url("../../images/themes/default/mActionMeasure.svg");
+            tooltip: "Medir Distância";
+            clicked => { root.measure(); }
+        }
+        
+        ToolButton {
+            icon: @image-url("../../images/themes/default/mActionMeasureArea.svg");
+            tooltip: "Medir Área";
+            clicked => { root.measure(); }
+        }
+        
+        // Separador
+        Rectangle {
+            width: 1px;
+            background: #e0e0e0;
+            vertical-stretch: 1;
+        }
+        
+        // Grupo: Desenho
+        ToolButton {
+            icon: @image-url("../../images/themes/default/mActionCapturePoint.svg");
+            tooltip: "Adicionar Ponto";
+            clicked => { root.draw-point(); }
+        }
+        
+        ToolButton {
+            icon: @image-url("../../images/themes/default/mActionCaptureLine.svg");
+            tooltip: "Adicionar Linha";
+            clicked => { root.draw-line(); }
+        }
+        
+        ToolButton {
+            icon: @image-url("../../images/themes/default/mActionCapturePolygon.svg");
+            tooltip: "Adicionar Polígono";
+            clicked => { root.draw-polygon(); }
+        }
+        
+        ToolButton {
+            icon: @image-url("../../images/themes/default/mActionLabel.svg");
+            tooltip: "Adicionar Texto/Label";
+            clicked => { root.draw-polygon(); }
+        }
+        
+        // Separador
+        Rectangle {
+            width: 1px;
+            background: #e0e0e0;
+            vertical-stretch: 1;
+        }
+        
+        // Grupo: Edição
+        ToolButton {
+            icon: @image-url("../../images/themes/default/mActionToggleEditing.svg");
+            tooltip: "Alternar Edição";
+            clicked => { root.draw-polygon(); }
+        }
+        
+        ToolButton {
+            icon: @image-url("../../images/themes/default/mActionMoveFeature.svg");
+            tooltip: "Mover Feição";
+            clicked => { root.draw-polygon(); }
+        }
+        
+        ToolButton {
+            icon: @image-url("../../images/themes/default/mActionDeleteSelected.svg");
+            tooltip: "Deletar Selecionado";
+            clicked => { root.draw-polygon(); }
+        }
+        
+        // Espaço flexível
+        Rectangle {
+            horizontal-stretch: 1;
+        }
+        
+        // Grupo: Visualização adicional
+        ToolButton {
+            icon: @image-url("../../images/themes/default/mActionMapSettings.svg");
+            tooltip: "Configurações do Mapa";
+            clicked => { root.zoom-extent(); }
+        }
+        
+        ToolButton {
+            icon: @image-url("../../images/themes/default/mActionRefresh.svg");
+            tooltip: "Atualizar Visualização";
+            clicked => { root.zoom-extent(); }
+        }
+    }
+    
+    // Linha divisória inferior
+    Rectangle {
+        y: parent.height - self.height;
+        height: 1px;
+        background: #e0e0e0;
+    }
+}
+

@@ -1,0 +1,319 @@
+import { MenuItem } from "menu_item.slint";
+import { SubMenu, SubMenuItem } from "submenu.slint";
+
+// Componente de barra de menu
+export component MenuBar inherits Rectangle {
+    background: #f8f9fa;
+    height: 40px;
+    
+    // Estados para controlar qual menu está aberto
+    property <bool> projeto-open: false;
+    property <bool> exibir-open: false;
+    property <bool> editar-open: false;
+    property <bool> complementos-open: false;
+    property <bool> ferramentas-open: false;
+    
+    HorizontalLayout {
+        padding-left: 12px;
+        padding-right: 12px;
+        spacing: 4px;
+        alignment: start;
+        
+        // Menu Projeto
+        menu-projeto := MenuItem {
+            text: "Projeto";
+            has-submenu: true;
+            submenu-open: root.projeto-open;
+            
+            clicked => {
+                root.projeto-open = !root.projeto-open;
+                root.exibir-open = false;
+                root.editar-open = false;
+                root.complementos-open = false;
+                root.ferramentas-open = false;
+            }
+        }
+        
+        // Menu Exibir
+        menu-exibir := MenuItem {
+            text: "Exibir";
+            has-submenu: true;
+            submenu-open: root.exibir-open;
+            
+            clicked => {
+                root.exibir-open = !root.exibir-open;
+                root.projeto-open = false;
+                root.editar-open = false;
+                root.complementos-open = false;
+                root.ferramentas-open = false;
+            }
+        }
+        
+        // Menu Editar
+        menu-editar := MenuItem {
+            text: "Editar";
+            has-submenu: true;
+            submenu-open: root.editar-open;
+            
+            clicked => {
+                root.editar-open = !root.editar-open;
+                root.projeto-open = false;
+                root.exibir-open = false;
+                root.complementos-open = false;
+                root.ferramentas-open = false;
+            }
+        }
+        
+        // Menu Complementos
+        menu-complementos := MenuItem {
+            text: "Complementos";
+            has-submenu: true;
+            submenu-open: root.complementos-open;
+            
+            clicked => {
+                root.complementos-open = !root.complementos-open;
+                root.projeto-open = false;
+                root.exibir-open = false;
+                root.editar-open = false;
+                root.ferramentas-open = false;
+            }
+        }
+        
+        // Menu Ferramentas
+        menu-ferramentas := MenuItem {
+            text: "Ferramentas";
+            has-submenu: true;
+            submenu-open: root.ferramentas-open;
+            
+            clicked => {
+                root.ferramentas-open = !root.ferramentas-open;
+                root.projeto-open = false;
+                root.exibir-open = false;
+                root.editar-open = false;
+                root.complementos-open = false;
+            }
+        }
+        
+        // Menu Sobre
+        MenuItem {
+            text: "Sobre";
+            has-submenu: false;
+        }
+    }
+    
+    // Submenus posicionados absolutamente sobre o menu
+    if root.projeto-open: SubMenu {
+        x: 12px;
+        y: root.height;
+        show: true;
+        
+        SubMenuItem {
+            text: "Abrir Projeto";
+            shortcut: "Ctrl+O";
+            clicked => { root.projeto-open = false; }
+        }
+        
+        SubMenuItem {
+            text: "Fechar Projeto";
+            shortcut: "Ctrl+W";
+            clicked => { root.projeto-open = false; }
+        }
+        
+        Rectangle {
+            height: 1px;
+            background: #ecf0f1;
+        }
+        
+        SubMenuItem {
+            text: "Novo Projeto";
+            shortcut: "Ctrl+N";
+            clicked => { root.projeto-open = false; }
+        }
+        
+        SubMenuItem {
+            text: "Salvar Projeto";
+            shortcut: "Ctrl+S";
+            clicked => { root.projeto-open = false; }
+        }
+        
+        Rectangle {
+            height: 1px;
+            background: #ecf0f1;
+        }
+        
+        SubMenuItem {
+            text: "Sair";
+            shortcut: "Alt+F4";
+            clicked => { root.projeto-open = false; }
+        }
+    }
+    
+    if root.exibir-open: SubMenu {
+        x: 90px;
+        y: root.height;
+        show: true;
+        
+        SubMenuItem {
+            text: "Aproximar Zoom";
+            shortcut: "Ctrl++";
+            clicked => { root.exibir-open = false; }
+        }
+        
+        SubMenuItem {
+            text: "Reduzir Zoom";
+            shortcut: "Ctrl+-";
+            clicked => { root.exibir-open = false; }
+        }
+        
+        SubMenuItem {
+            text: "Zoom Extend";
+            shortcut: "Ctrl+0";
+            clicked => { root.exibir-open = false; }
+        }
+        
+        Rectangle {
+            height: 1px;
+            background: #ecf0f1;
+        }
+        
+        SubMenuItem {
+            text: "Tela Cheia";
+            shortcut: "F11";
+            clicked => { root.exibir-open = false; }
+        }
+        
+        SubMenuItem {
+            text: "Grade";
+            shortcut: "Ctrl+G";
+            clicked => { root.exibir-open = false; }
+        }
+    }
+    
+    if root.editar-open: SubMenu {
+        x: 155px;
+        y: root.height;
+        show: true;
+        
+        SubMenuItem {
+            text: "Editar Camada";
+            shortcut: "Ctrl+E";
+            clicked => { root.editar-open = false; }
+        }
+        
+        SubMenuItem {
+            text: "Editar Linha";
+            shortcut: "Ctrl+L";
+            clicked => { root.editar-open = false; }
+        }
+        
+        Rectangle {
+            height: 1px;
+            background: #ecf0f1;
+        }
+        
+        SubMenuItem {
+            text: "Desfazer";
+            shortcut: "Ctrl+Z";
+            clicked => { root.editar-open = false; }
+        }
+        
+        SubMenuItem {
+            text: "Refazer";
+            shortcut: "Ctrl+Y";
+            clicked => { root.editar-open = false; }
+        }
+        
+        Rectangle {
+            height: 1px;
+            background: #ecf0f1;
+        }
+        
+        SubMenuItem {
+            text: "Copiar";
+            shortcut: "Ctrl+C";
+            clicked => { root.editar-open = false; }
+        }
+        
+        SubMenuItem {
+            text: "Colar";
+            shortcut: "Ctrl+V";
+            clicked => { root.editar-open = false; }
+        }
+    }
+    
+    if root.complementos-open: SubMenu {
+        x: 215px;
+        y: root.height;
+        show: true;
+        
+        SubMenuItem {
+            text: "Adicionar Complementos";
+            clicked => { root.complementos-open = false; }
+        }
+        
+        Rectangle {
+            height: 1px;
+            background: #ecf0f1;
+        }
+        
+        SubMenuItem {
+            text: "Gerenciar Complementos";
+            clicked => { root.complementos-open = false; }
+        }
+        
+        SubMenuItem {
+            text: "Marketplace";
+            clicked => { root.complementos-open = false; }
+        }
+    }
+    
+    if root.ferramentas-open: SubMenu {
+        x: 350px;
+        y: root.height;
+        show: true;
+        
+        SubMenuItem {
+            text: "Caixa de Ferramentas";
+            shortcut: "Ctrl+T";
+            clicked => { root.ferramentas-open = false; }
+        }
+        
+        Rectangle {
+            height: 1px;
+            background: #ecf0f1;
+        }
+        
+        SubMenuItem {
+            text: "Calculadora";
+            clicked => { root.ferramentas-open = false; }
+        }
+        
+        SubMenuItem {
+            text: "Medição";
+            clicked => { root.ferramentas-open = false; }
+        }
+        
+        SubMenuItem {
+            text: "Análise";
+            clicked => { root.ferramentas-open = false; }
+        }
+        
+        Rectangle {
+            height: 1px;
+            background: #ecf0f1;
+        }
+        
+        SubMenuItem {
+            text: "Configurações";
+            shortcut: "Ctrl+,";
+            clicked => { root.ferramentas-open = false; }
+        }
+    }
+    
+    // Linha divisória inferior
+    Rectangle {
+        y: parent.height - self.height;
+        height: 1px;
+        background: #dfe6e9;
+    }
+}

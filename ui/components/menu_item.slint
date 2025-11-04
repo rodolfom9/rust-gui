@@ -1,0 +1,51 @@
+// Componente de item de menu principal
+export component MenuItem inherits Rectangle {
+    in property <string> text;
+    in property <bool> has-submenu: false;
+    in-out property <bool> submenu-open: false;
+    
+    callback clicked;
+    
+    width: text-label.preferred-width + 32px;
+    height: 40px;
+    
+    states [
+        open when submenu-open: {
+            background: #e8e8e8;
+        }
+        hover when touch-area.has-hover: {
+            background: #e8e8e8;
+        }
+        pressed when touch-area.pressed: {
+            background: #d0d0d0;
+        }
+    ]
+    
+    touch-area := TouchArea {
+        clicked => {
+            root.clicked();
+        }
+    }
+    
+    HorizontalLayout {
+        padding: 8px;
+        spacing: 4px;
+        
+        text-label := Text {
+            text: root.text;
+            color: #2c3e50;
+            font-size: 14px;
+            vertical-alignment: center;
+        }
+        
+        if root.has-submenu: Text {
+            text: "▼";
+            color: #7f8c8d;
+            font-size: 10px;
+            vertical-alignment: center;
+        }
+    }
+    
+    @children
+}
+

@@ -1,0 +1,172 @@
+import { Button, VerticalBox, HorizontalBox } from "std-widgets.slint";
+import { ToolBar } from "components/toolbar.slint";
+import { FloatingLayersPanel } from "components/floating_panel.slint";
+import { StatusBar } from "components/statusbar.slint";
+
+// Janela principal
+export component MainWindow inherits Window {
+    title: "Rust GUI - Sistema Profissional";
+    preferred-width: 1400px;
+    preferred-height: 900px;
+    min-width: 1000px;
+    min-height: 700px;
+    icon: @image-url("../icon.svg");
+    
+    // MenuBar nativo do Slint
+    MenuBar {
+        Menu {
+            title: "Projeto";
+            MenuItem { title: "Abrir Projeto"; }
+            MenuItem { title: "Fechar Projeto"; }
+            MenuSeparator {}
+            MenuItem { title: "Novo Projeto"; }
+            MenuItem { title: "Salvar Projeto"; }
+            MenuSeparator {}
+            MenuItem { title: "Sair"; }
+        }
+        
+        Menu {
+            title: "Exibir";
+            MenuItem { title: "Aproximar Zoom"; }
+            MenuItem { title: "Reduzir Zoom"; }
+            MenuItem { title: "Zoom Extend"; }
+            MenuSeparator {}
+            MenuItem { title: "Tela Cheia"; }
+            MenuItem { title: "Grade"; }
+        }
+        
+        Menu {
+            title: "Editar";
+            MenuItem { title: "Editar Camada"; }
+            MenuItem { title: "Editar Linha"; }
+            MenuSeparator {}
+            MenuItem { title: "Desfazer"; }
+            MenuItem { title: "Refazer"; }
+            MenuSeparator {}
+            MenuItem { title: "Copiar"; }
+            MenuItem { title: "Colar"; }
+        }
+        
+        Menu {
+            title: "Complementos";
+            MenuItem { title: "Adicionar Complementos"; }
+            MenuSeparator {}
+            MenuItem { title: "Gerenciar Complementos"; }
+            MenuItem { title: "Marketplace"; }
+        }
+        
+        Menu {
+            title: "Ferramentas";
+            MenuItem { title: "Caixa de Ferramentas"; }
+            MenuSeparator {}
+            MenuItem { title: "Calculadora"; }
+            MenuItem { title: "Medição"; }
+            MenuItem { title: "Análise"; }
+            MenuSeparator {}
+            MenuItem { title: "Configurações"; }
+        }
+        
+        Menu {
+            title: "Sobre";
+        }
+    }
+    
+    // Layout principal
+    Rectangle {
+        background: #ecf0f1;
+        
+        VerticalLayout {
+            padding: 0px;
+            spacing: 0px;
+            
+            // Toolbar
+            toolbar := ToolBar {
+                new-project => {
+                    debug("Novo Projeto");
+                }
+                
+                open-project => {
+                    debug("Abrir Projeto");
+                }
+                
+                save-project => {
+                    debug("Salvar Projeto");
+                }
+                
+                undo => {
+                    debug("Desfazer");
+                }
+                
+                redo => {
+                    debug("Refazer");
+                }
+                
+                zoom-in => {
+                    debug("Zoom In");
+                }
+                
+                zoom-out => {
+                    debug("Zoom Out");
+                }
+                
+                zoom-extent => {
+                    debug("Zoom Extent");
+                }
+                
+                pan => {
+                    debug("Pan");
+                }
+                
+                select => {
+                    debug("Selecionar");
+                }
+                
+                measure => {
+                    debug("Medir");
+                }
+                
+                draw-point => {
+                    debug("Desenhar Ponto");
+                }
+                
+                draw-line => {
+                    debug("Desenhar Linha");
+                }
+                
+                draw-polygon => {
+                    debug("Desenhar Polígono");
+                }
+            }
+            
+            // Área principal
+            HorizontalLayout {
+                vertical-stretch: 1;
+                spacing: 0px;
+                
+                Rectangle {
+                    background: #ffffff;
+                    horizontal-stretch: 1;
+                }
+            }
+            
+            // Barra de status (coordenadas movidas para cá, como no QGIS)
+            statusbar := StatusBar {
+                coordinates: "X: 0.000  Y: 0.000";
+                scale: "1:50000";
+                crs: "EPSG:31983";
+                message: "Pronto";
+            }
+        }
+        
+        // Painel flutuante de camadas (sobreposto na janela)
+        floating-layers := FloatingLayersPanel {
+            layers: [
+                "Camada de Pontos",
+                "Camada de Linhas",
+                "Camada de Polígonos",
+                "Mapa Base",
+                "Imagem de Satélite"
+            ];
+        }
+    }
+}

@@ -1,0 +1,67 @@
+// Componente de item de submenu
+export component SubMenuItem inherits Rectangle {
+    in property <string> text;
+    in property <string> shortcut: "";
+    
+    callback clicked;
+    
+    height: 32px;
+    
+    states [
+        hover when touch-area.has-hover: {
+            background: #e3f2fd;
+        }
+        pressed when touch-area.pressed: {
+            background: #bbdefb;
+        }
+    ]
+    
+    touch-area := TouchArea {
+        clicked => {
+            root.clicked();
+        }
+    }
+    
+    HorizontalLayout {
+        padding-left: 16px;
+        padding-right: 16px;
+        spacing: 24px;
+        
+        Text {
+            text: root.text;
+            color: #2c3e50;
+            font-size: 13px;
+            vertical-alignment: center;
+            horizontal-stretch: 1;
+        }
+        
+        if root.shortcut != "": Text {
+            text: root.shortcut;
+            color: #95a5a6;
+            font-size: 11px;
+            vertical-alignment: center;
+        }
+    }
+}
+
+// Componente de submenu
+export component SubMenu inherits Rectangle {
+    in property <bool> show: false;
+    
+    visible: root.show;
+    width: 220px;
+    height: content-layout.preferred-height;
+    background: #ffffff;
+    border-width: 1px;
+    border-color: #bdc3c7;
+    drop-shadow-blur: 8px;
+    drop-shadow-color: #00000040;
+    
+    content-layout := VerticalLayout {
+        padding: 4px;
+        spacing: 2px;
+        
+        @children
+    }
+}
+
