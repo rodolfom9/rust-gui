@@ -1,0 +1,158 @@
+import { VerticalBox } from "std-widgets.slint";
+
+// Splash Screen Component
+export component SplashScreen inherits Window {
+    in property <string> message: "Inicializando...";
+    in property <string> version: "v0.1.0";
+    in property <bool> is-dev-version: true;
+    
+    // Sem bordas e sempre no topo
+    no-frame: true;
+    title: "";
+    
+    // Dimensões fixas (proporção similar ao QGIS: 600x300)
+    preferred-width: 600px;
+    preferred-height: 300px;
+    min-width: 600px;
+    min-height: 300px;
+    max-width: 600px;
+    max-height: 300px;
+    
+    // Container principal com gradiente
+    Rectangle {
+        background: @linear-gradient(180deg, #2c3e50 0%, #34495e 100%);
+        border-radius: 12px;
+        drop-shadow-blur: 20px;
+        drop-shadow-color: #00000080;
+        drop-shadow-offset-y: 4px;
+        
+        VerticalLayout {
+            padding: 30px;
+            spacing: 20px;
+            
+            // Área superior - Logo e título
+            VerticalLayout {
+                spacing: 10px;
+                vertical-stretch: 1;
+                
+                // Logo placeholder (pode substituir por imagem)
+                Rectangle {
+                    height: 80px;
+                    
+                    HorizontalLayout {
+                        alignment: center;
+                        
+                        Rectangle {
+                            width: 80px;
+                            height: 80px;
+                            background: @linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+                            border-radius: 40px;
+                            drop-shadow-blur: 10px;
+                            drop-shadow-color: #3498db60;
+                            
+                            // Ícone simples
+                            Rectangle {
+                                width: 50px;
+                                height: 50px;
+                                x: 15px;
+                                y: 15px;
+                                background: white;
+                                border-radius: 8px;
+                            }
+                        }
+                    }
+                }
+                
+                // Título da aplicação
+                Text {
+                    text: "Rust GUI Professional";
+                    font-size: 28px;
+                    font-weight: 700;
+                    color: white;
+                    horizontal-alignment: center;
+                }
+                
+                // Versão
+                HorizontalLayout {
+                    alignment: center;
+                    
+                    Text {
+                        text: version;
+                        font-size: 14px;
+                        color: is-dev-version ? #5D9933 : #95a5a6;
+                        horizontal-alignment: center;
+                    }
+                    
+                    if is-dev-version: Rectangle {
+                        width: 80px;
+                        height: 20px;
+                        background: #5D9933;
+                        border-radius: 4px;
+                        
+                        Text {
+                            text: "DEV";
+                            font-size: 11px;
+                            font-weight: 700;
+                            color: white;
+                            horizontal-alignment: center;
+                            vertical-alignment: center;
+                        }
+                    }
+                }
+            }
+            
+            // Barra de progresso animada
+            Rectangle {
+                height: 4px;
+                background: #34495e;
+                border-radius: 2px;
+                
+                progress-bar := Rectangle {
+                    width: parent.width * 0.3;
+                    height: 4px;
+                    background: is-dev-version ? #5D9933 : #3498db;
+                    border-radius: 2px;
+                    
+                    animate width {
+                        duration: 2s;
+                        iteration-count: -1;
+                        easing: ease-in-out;
+                    }
+                }
+            }
+            
+            // Área de mensagem
+            Rectangle {
+                height: 60px;
+                
+                VerticalLayout {
+                    spacing: 5px;
+                    
+                    // Mensagem de status
+                    Text {
+                        text: message;
+                        font-size: 14px;
+                        color: white;
+                        horizontal-alignment: center;
+                    }
+                    
+                    // Submensagem (opcional)
+                    Text {
+                        text: "Carregando recursos...";
+                        font-size: 11px;
+                        color: #95a5a6;
+                        horizontal-alignment: center;
+                    }
+                }
+            }
+            
+            // Copyright/Info
+            Text {
+                text: "© 2025 - Desenvolvido com Rust & Slint";
+                font-size: 10px;
+                color: #7f8c8d;
+                horizontal-alignment: center;
+            }
+        }
+    }
+}
