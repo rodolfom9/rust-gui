@@ -52,7 +52,7 @@ fn main() -> Result<(), slint::PlatformError> {
     let timer = Timer::default();
     let phase_clone = phase.clone();
     
-    timer.start(TimerMode::Repeated, std::time::Duration::from_millis(600), move || {
+    timer.start(TimerMode::Repeated, std::time::Duration::from_millis(300), move || {
         let mut current_phase = phase_clone.borrow_mut();
         
         if let Some(splash) = splash_weak.upgrade() {

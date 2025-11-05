@@ -78,12 +78,16 @@ component LayerItem inherits Rectangle {
 // Painel flutuante e movimentável para camadas
 export component FloatingLayersPanel inherits Rectangle {
     in property <[string]> layers: ["Camada 1", "Camada 2", "Camada 3"];
-    in property <length> panel-x: 20px;
-    in property <length> panel-y: 60px;
     property <bool> is-collapsed: false;
+    property <bool> is-visible: true;
     
-    x: panel-x;
-    y: panel-y;
+    // Propriedades para arrastar
+    property <length> drag-offset-x: 0px;
+    property <length> drag-offset-y: 0px;
+    
+    visible: is-visible;
+    x: 20px + drag-offset-x;
+    y: 80px + drag-offset-y;
     width: is-collapsed ? 50px : 280px;
     height: 400px;
     background: #f8f9fa;
@@ -101,45 +105,98 @@ export component FloatingLayersPanel inherits Rectangle {
         header := Rectangle {
             height: 40px;
             background: #34495e;
-            border-radius: 6px;
+            border-top-left-radius: 6px;
+            border-top-right-radius: 6px;
+            
+            // Área de arrastar
+            drag-area := TouchArea {
+                width: parent.width - 80px;
+                height: parent.height;
+                
+                moved => {
+                    if (self.pressed) {
+                        root.drag-offset-x += self.mouse-x - self.pressed-x;
+                        root.drag-offset-y += self.mouse-y - self.pressed-y;
+                    }
+                }
+            }
             
             HorizontalLayout {
-                padding: 12px;
+                padding: 8px;
                 spacing: 8px;
                 
-                // Botão hamburger
-                hamburger-area := TouchArea {
+                // Ícone de camadas
+                Image {
+                    source: @image-url("../../images/themes/default/mActionLayers.svg");
                     width: 20px;
                     height: 20px;
-                    clicked => {
-                        root.is-collapsed = !root.is-collapsed;
-                    }
-                    
-                    Image {
-                        source: @image-url("../../images/themes/default/mActionToggleEditing.svg");
-                        width: 20px;
-                        height: 20px;
-                    }
                 }
                 
                 // Título
-                if (!root.is-collapsed) : HorizontalLayout {
+                if (!root.is-collapsed) : Text {
+                    text: "Camadas";
+                    color: #ffffff;
+                    font-size: 14px;
+                    font-weight: 600;
+                    vertical-alignment: center;
                     horizontal-stretch: 1;
-                    padding-right: 8px;
+                }
+                
+                Rectangle {
+                    horizontal-stretch: 1;
+                }
+                
+                // Botão minimizar/expandir
+                minimize-btn := Rectangle {
+                    width: 28px;
+                    height: 28px;
+                    border-radius: 4px;
                     
-                    Image {
-                        source: @image-url("../../images/themes/default/mActionLayers.svg");
-                        width: 20px;
-                        height: 20px;
+                    states [
+                        hover when minimize-touch.has-hover: {
+                            background: #2c3e50;
+                        }
+                    ]
+                    
+                    minimize-touch := TouchArea {
+                        clicked => {
+                            root.is-collapsed = !root.is-collapsed;
+                        }
                     }
                     
                     Text {
-                        text: "Camadas";
+                        text: root.is-collapsed ? "+" : "−";
                         color: #ffffff;
-                        font-size: 14px;
-                        font-weight: 600;
+                        font-size: 18px;
+                        horizontal-alignment: center;
                         vertical-alignment: center;
-                        horizontal-stretch: 1;
+                    }
+                }
+                
+                // Botão fechar
+                close-btn := Rectangle {
+                    width: 28px;
+                    height: 28px;
+                    border-radius: 4px;
+                    
+                    states [
+                        hover when close-touch.has-hover: {
+                            background: #e74c3c;
+                        }
+                    ]
+                    
+                    close-touch := TouchArea {
+                        clicked => {
+                            root.is-visible = false;
+                        }
+                    }
+                    
+                    Text {
+                        text: "✕";
+                        color: #ffffff;
+                        font-size: 16px;
+                        horizontal-alignment: center;
+                        vertical-alignment: center;
                     }
                 }
             }
@@ -167,10 +224,6 @@ export component FloatingLayersPanel inherits Rectangle {
                 LayerToolButton {
                     icon: @image-url("../../images/themes/default/mActionToggleEditing.svg");
                     tooltip: "Editar Camada";
-                }
-                
-                Rectangle {
-                    horizontal-stretch: 1;
                 }
             }
             

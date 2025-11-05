@@ -1,0 +1,373 @@
+import { Button, VerticalBox, HorizontalBox, TabWidget, CheckBox, ComboBox, LineEdit, SpinBox, ScrollView } from "std-widgets.slint";
+
+export component SettingsDialog inherits Dialog {
+    title: "Configurações";
+    preferred-width: 800px;
+    preferred-height: 600px;
+    
+    callback apply-settings();
+    callback cancel-settings();
+    
+    // Propriedades de configuração
+    in-out property <bool> auto-save: true;
+    in-out property <int> auto-save-interval: 5;
+    in-out property <bool> show-grid: true;
+    in-out property <string> theme: "Claro";
+    in-out property <string> language: "Português (Brasil)";
+    in-out property <bool> show-tooltips: true;
+    in-out property <bool> check-updates: true;
+    in-out property <int> max-undo: 50;
+    in-out property <string> default-crs: "EPSG:31983";
+    in-out property <bool> show-coordinates: true;
+    in-out property <int> decimal-places: 3;
+    
+    VerticalBox {
+        padding: 20px;
+        spacing: 15px;
+        
+        // Título
+        Text {
+            text: "Configurações do Sistema";
+            font-size: 20px;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+        
+        // Abas de configuração
+        TabWidget {
+            vertical-stretch: 1;
+            
+            // Aba Geral
+            Tab {
+                title: "Geral";
+                
+                ScrollView {
+                    VerticalBox {
+                        padding: 15px;
+                        spacing: 20px;
+                        
+                        // Seção: Salvamento Automático
+                        Rectangle {
+                            background: #f8f9fa;
+                            border-radius: 8px;
+                            
+                            VerticalBox {
+                                padding: 15px;
+                                spacing: 10px;
+                                
+                                Text {
+                                    text: "Salvamento Automático";
+                                    font-size: 14px;
+                                    font-weight: 700;
+                                    color: #2c3e50;
+                                }
+                                
+                                HorizontalBox {
+                                    CheckBox {
+                                        text: "Ativar salvamento automático";
+                                        checked <=> root.auto-save;
+                                    }
+                                }
+                                
+                                HorizontalBox {
+                                    spacing: 10px;
+                                    alignment: start;
+                                    
+                                    Text {
+                                        text: "Intervalo (minutos):";
+                                        vertical-alignment: center;
+                                    }
+                                    
+                                    SpinBox {
+                                        value <=> root.auto-save-interval;
+                                        minimum: 1;
+                                        maximum: 60;
+                                        enabled: root.auto-save;
+                                    }
+                                }
+                            }
+                        }
+                        
+                        // Seção: Aparência
+                        Rectangle {
+                            background: #f8f9fa;
+                            border-radius: 8px;
+                            
+                            VerticalBox {
+                                padding: 15px;
+                                spacing: 10px;
+                                
+                                Text {
+                                    text: "Aparência";
+                                    font-size: 14px;
+                                    font-weight: 700;
+                                    color: #2c3e50;
+                                }
+                                
+                                HorizontalBox {
+                                    spacing: 10px;
+                                    alignment: start;
+                                    
+                                    Text {
+                                        text: "Tema:";
+                                        vertical-alignment: center;
+                                        width: 120px;
+                                    }
+                                    
+                                    ComboBox {
+                                        model: ["Claro", "Escuro", "Automático"];
+                                        current-value <=> root.theme;
+                                    }
+                                }
+                                
+                                HorizontalBox {
+                                    spacing: 10px;
+                                    alignment: start;
+                                    
+                                    Text {
+                                        text: "Idioma:";
+                                        vertical-alignment: center;
+                                        width: 120px;
+                                    }
+                                    
+                                    ComboBox {
+                                        model: ["Português (Brasil)", "English", "Español"];
+                                        current-value <=> root.language;
+                                    }
+                                }
+                                
+                                HorizontalBox {
+                                    CheckBox {
+                                        text: "Exibir grade";
+                                        checked <=> root.show-grid;
+                                    }
+                                }
+                                
+                                HorizontalBox {
+                                    CheckBox {
+                                        text: "Exibir dicas de ferramentas";
+                                        checked <=> root.show-tooltips;
+                                    }
+                                }
+                            }
+                        }
+                        
+                        // Seção: Atualizações
+                        Rectangle {
+                            background: #f8f9fa;
+                            border-radius: 8px;
+                            
+                            VerticalBox {
+                                padding: 15px;
+                                spacing: 10px;
+                                
+                                Text {
+                                    text: "Atualizações";
+                                    font-size: 14px;
+                                    font-weight: 700;
+                                    color: #2c3e50;
+                                }
+                                
+                                HorizontalBox {
+                                    CheckBox {
+                                        text: "Verificar atualizações automaticamente";
+                                        checked <=> root.check-updates;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+            // Aba Editor
+            Tab {
+                title: "Editor";
+                
+                ScrollView {
+                    VerticalBox {
+                        padding: 15px;
+                        spacing: 20px;
+                        
+                        // Seção: Histórico
+                        Rectangle {
+                            background: #f8f9fa;
+                            border-radius: 8px;
+                            
+                            VerticalBox {
+                                padding: 15px;
+                                spacing: 10px;
+                                
+                                Text {
+                                    text: "Histórico de Edição";
+                                    font-size: 14px;
+                                    font-weight: 700;
+                                    color: #2c3e50;
+                                }
+                                
+                                HorizontalBox {
+                                    spacing: 10px;
+                                    alignment: start;
+                                    
+                                    Text {
+                                        text: "Máximo de desfazer:";
+                                        vertical-alignment: center;
+                                        width: 150px;
+                                    }
+                                    
+                                    SpinBox {
+                                        value <=> root.max-undo;
+                                        minimum: 10;
+                                        maximum: 200;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+            // Aba Coordenadas
+            Tab {
+                title: "Coordenadas";
+                
+                ScrollView {
+                    VerticalBox {
+                        padding: 15px;
+                        spacing: 20px;
+                        
+                        // Seção: Sistema de Coordenadas
+                        Rectangle {
+                            background: #f8f9fa;
+                            border-radius: 8px;
+                            
+                            VerticalBox {
+                                padding: 15px;
+                                spacing: 10px;
+                                
+                                Text {
+                                    text: "Sistema de Referência de Coordenadas (CRS)";
+                                    font-size: 14px;
+                                    font-weight: 700;
+                                    color: #2c3e50;
+                                }
+                                
+                                HorizontalBox {
+                                    spacing: 10px;
+                                    alignment: start;
+                                    
+                                    Text {
+                                        text: "CRS Padrão:";
+                                        vertical-alignment: center;
+                                        width: 120px;
+                                    }
+                                    
+                                    ComboBox {
+                                        model: ["EPSG:31983", "EPSG:4326", "EPSG:3857", "EPSG:31982"];
+                                        current-value <=> root.default-crs;
+                                    }
+                                }
+                                
+                                HorizontalBox {
+                                    CheckBox {
+                                        text: "Exibir coordenadas na barra de status";
+                                        checked <=> root.show-coordinates;
+                                    }
+                                }
+                                
+                                HorizontalBox {
+                                    spacing: 10px;
+                                    alignment: start;
+                                    
+                                    Text {
+                                        text: "Casas decimais:";
+                                        vertical-alignment: center;
+                                        width: 120px;
+                                    }
+                                    
+                                    SpinBox {
+                                        value <=> root.decimal-places;
+                                        minimum: 0;
+                                        maximum: 10;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+            // Aba Performance
+            Tab {
+                title: "Performance";
+                
+                ScrollView {
+                    VerticalBox {
+                        padding: 15px;
+                        spacing: 20px;
+                        
+                        Rectangle {
+                            background: #f8f9fa;
+                            border-radius: 8px;
+                            
+                            VerticalBox {
+                                padding: 15px;
+                                spacing: 10px;
+                                
+                                Text {
+                                    text: "Otimização de Performance";
+                                    font-size: 14px;
+                                    font-weight: 700;
+                                    color: #2c3e50;
+                                }
+                                
+                                Text {
+                                    text: "Configure aqui opções de performance do sistema.";
+                                    font-size: 12px;
+                                    color: #7f8c8d;
+                                    wrap: word-wrap;
+                                }
+                                
+                                HorizontalBox {
+                                    CheckBox {
+                                        text: "Usar aceleração por hardware";
+                                        checked: true;
+                                    }
+                                }
+                                
+                                HorizontalBox {
+                                    CheckBox {
+                                        text: "Renderização simplificada para grandes conjuntos de dados";
+                                        checked: false;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        // Botões de ação
+        HorizontalBox {
+            spacing: 10px;
+            alignment: end;
+            
+            Button {
+                text: "Cancelar";
+                clicked => {
+                    root.cancel-settings();
+                }
+            }
+            
+            Button {
+                text: "Aplicar";
+                primary: true;
+                clicked => {
+                    root.apply-settings();
+                }
+            }
+        }
+    }
+}
+

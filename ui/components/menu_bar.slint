@@ -6,6 +6,10 @@ export component MenuBar inherits Rectangle {
     background: #f8f9fa;
     height: 40px;
     
+    // Callbacks para ações do menu
+    callback menu-quit();
+    callback menu-settings();
+    
     // Estados para controlar qual menu está aberto
     property <bool> projeto-open: false;
     property <bool> exibir-open: false;
@@ -144,7 +148,10 @@ export component MenuBar inherits Rectangle {
         SubMenuItem {
             text: "Sair";
             shortcut: "Alt+F4";
-            clicked => { root.projeto-open = false; }
+            clicked => { 
+                root.projeto-open = false;
+                root.menu-quit();
+            }
         }
     }
     
@@ -306,7 +313,10 @@ export component MenuBar inherits Rectangle {
         SubMenuItem {
             text: "Configurações";
             shortcut: "Ctrl+,";
-            clicked => { root.ferramentas-open = false; }
+            clicked => { 
+                root.ferramentas-open = false;
+                root.menu-settings();
+            }
         }
     }
     
