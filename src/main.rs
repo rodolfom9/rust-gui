@@ -77,7 +77,44 @@ fn main() -> Result<(), slint::PlatformError> {
     // Executar o loop de eventos da splash
     splash.run()?;
     
+    // Pequeno delay para garantir que a splash fechou completamente
+    std::thread::sleep(std::time::Duration::from_millis(100));
+    
     // Após a splash fechar, criar e executar a janela principal
     let main_window = MainWindow::new()?;
+    
+    // Forçar a exibição da janela
+    main_window.show()?;
+    
+    // Centralizar a janela principal após um pequeno delay
+    let main_weak_for_center = main_window.as_weak();
+    let main_center_timer = Timer::default();
+    main_center_timer.start(TimerMode::SingleShot, std::time::Duration::from_millis(10), move || {
+        if let Some(main_win) = main_weak_for_center.upgrade() {
+            let window = main_win.window();
+            let size = window.size();
+            
+            // Centralizar e forçar foco no Windows
+            window.with_winit_window(|winit_window| {
+                if let Some(monitor) = winit_window.current_monitor() {
+                    let monitor_size = monitor.size();
+                    let scale_factor = monitor.scale_factor();
+                    
+                    // Calcular o centro da tela considerando o DPI scaling
+                    let screen_width = (monitor_size.width as f64 / scale_factor) as i32;
+                    let screen_height = (monitor_size.height as f64 / scale_factor) as i32;
+                    
+                    let x = (screen_width - size.width as i32) / 2;
+                    let y = (screen_height - size.height as i32) / 2;
+                    
+                    window.set_position(WindowPosition::Physical(PhysicalPosition::new(x.max(0), y.max(0))));
+                }
+                
+                // Forçar foco na janela (importante no Windows)
+                winit_window.focus_window();
+            });
+        }
+    });
+    
     main_window.run()
 }
