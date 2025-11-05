@@ -84,18 +84,79 @@ export component FloatingLayersPanel inherits Rectangle {
     // Propriedades para arrastar
     property <length> drag-offset-x: 0px;
     property <length> drag-offset-y: 0px;
+    property <bool> is-snapped-left: target-x-clamped < snap-distance;
+    property <bool> is-snapped-right: target-x-clamped > max-x - snap-distance;
+    
+    // Dimensões da área de trabalho (área utilizável da janela principal)
+    property <length> workspace-x: 0px;
+    property <length> workspace-y: 80px; // Após MenuBar (40px) e Toolbar
+    property <length> workspace-width: 1400px; // Será ajustado dinamicamente
+    property <length> workspace-height: 800px; // Será ajustado dinamicamente
+    
+    // Zona magnética (distância para snap)
+    property <length> snap-distance: 30px;
+    
+    // Largura do painel
+    property <length> panel-width: is-collapsed ? 50px : 280px;
+    
+    // Calcular posição X com limites
+    property <length> target-x-raw: 20px + drag-offset-x;
+    property <length> max-x: workspace-width - panel-width - 20px;
+    property <length> target-x-clamped: Math.max(workspace-x, Math.min(target-x-raw, max-x));
+    
+    // Calcular posição Y com limites
+    property <length> target-y-raw: workspace-y + drag-offset-y;
+    property <length> max-y: workspace-height - self.height;
+    property <length> calculated-y: Math.max(workspace-y, Math.min(target-y-raw, max-y));
+    
+    // Aplicar snap magnético
+    property <length> calculated-x: {
+        // Snap esquerda
+        if (target-x-clamped < snap-distance) {
+            workspace-x + 10px
+        } 
+        // Snap direita
+        else if (target-x-clamped > max-x - snap-distance) {
+            max-x - 10px
+        }
+        // Posição livre
+        else {
+            target-x-clamped
+        }
+    };
     
     visible: is-visible;
-    x: 20px + drag-offset-x;
-    y: 80px + drag-offset-y;
+    x: calculated-x;
+    y: calculated-y;
     width: is-collapsed ? 50px : 280px;
     height: 400px;
-    background: #f8f9fa;
+    background: is-snapped-left || is-snapped-right ? #f0f3f4 : #f8f9fa;
     border-radius: 6px;
     drop-shadow-blur: 8px;
     drop-shadow-color: #00000040;
     
     animate width { duration: 250ms; easing: ease-in-out; }
+    animate x { duration: 150ms; easing: ease-out; }
+    animate background { duration: 200ms; }
+    
+    // Indicador de snap (barra lateral)
+    if root.is-snapped-left: Rectangle {
+        x: 0px;
+        width: 3px;
+        height: parent.height;
+        background: #3498db;
+        border-top-left-radius: 6px;
+        border-bottom-left-radius: 6px;
+    }
+    
+    if root.is-snapped-right: Rectangle {
+        x: parent.width - 3px;
+        width: 3px;
+        height: parent.height;
+        background: #3498db;
+        border-top-right-radius: 6px;
+        border-bottom-right-radius: 6px;
+    }
     
     VerticalLayout {
         padding: 0px;
