@@ -1,0 +1,596 @@
+import { VerticalBox, ScrollView } from "std-widgets.slint";
+
+// Estrutura para representar uma aba
+export struct Tab {
+    id: string,
+    title: string,
+    icon: image,
+}
+
+// Botão de aba no painel minimizado
+component TabButton inherits Rectangle {
+    in property <image> icon;
+    in property <bool> is-active: false;
+    in property <string> tooltip;
+    
+    callback clicked();
+    
+    // TAMANHO: 40x40px (alinhado com a altura do MenuBar superior)
+    width: 40px;
+    height: 40px;
+    
+    states [
+        active when root.is-active: {
+            background: #2980b9;
+            in {
+                animate background { duration: 200ms; easing: ease-in-out; }
+            }
+            out {
+                animate background { duration: 200ms; easing: ease-in-out; }
+            }
+        }
+        hover when touch-area.has-hover && !root.is-active: {
+            background: #34495e;
+            in {
+                animate background { duration: 150ms; easing: ease-in-out; }
+            }
+        }
+        normal when !root.is-active && !touch-area.has-hover: {
+            background: transparent;
+        }
+    ]
+    
+    touch-area := TouchArea {
+        clicked => { root.clicked(); }
+    }
+    
+    // Ícone centralizado
+    Image {
+        source: root.icon;
+        // TAMANHO: 24x24px (proporcional ao botão de 40x40px)
+        width: 24px;
+        height: 24px;
+        x: (parent.width - self.width) / 2;
+        y: (parent.height - self.height) / 2;
+        // Removido colorize para mostrar cores reais dos ícones
+    }
+    
+    // Indicador de aba ativa
+    if root.is-active: Rectangle {
+        x: 0px;
+        // TAMANHO: Faixa lateral de 3px indicando aba ativa
+        width: 3px;
+        height: 100%;
+        background: #3498db;
+    }
+}
+
+// Conteúdo da aba "Camadas"
+component LayersTabContent inherits Rectangle {
+    background: #ffffff;
+    
+    VerticalLayout {
+        padding: 0px;
+        spacing: 0px;
+        
+        // Toolbar de camadas
+        Rectangle {
+            height: 40px;
+            background: #ecf0f1;
+            
+            HorizontalLayout {
+                padding: 4px;
+                spacing: 4px;
+                
+                // Botão adicionar
+                Rectangle {
+                    width: 32px;
+                    height: 32px;
+                    border-radius: 3px;
+                    
+                    states [
+                        hover when add-touch.has-hover: {
+                            background: #d5dbdb;
+                        }
+                    ]
+                    
+                    add-touch := TouchArea { }
+                    
+                    Image {
+                        source: @image-url("../../images/themes/default/mActionAdd.svg");
+                        width: 20px;
+                        height: 20px;
+                        x: (parent.width - self.width) / 2;
+                        y: (parent.height - self.height) / 2;
+                    }
+                }
+                
+                // Botão remover
+                Rectangle {
+                    width: 32px;
+                    height: 32px;
+                    border-radius: 3px;
+                    
+                    states [
+                        hover when remove-touch.has-hover: {
+                            background: #d5dbdb;
+                        }
+                    ]
+                    
+                    remove-touch := TouchArea { }
+                    
+                    Image {
+                        source: @image-url("../../images/themes/default/mActionRemove.svg");
+                        width: 20px;
+                        height: 20px;
+                        x: (parent.width - self.width) / 2;
+                        y: (parent.height - self.height) / 2;
+                    }
+                }
+                
+                // Botão editar
+                Rectangle {
+                    width: 32px;
+                    height: 32px;
+                    border-radius: 3px;
+                    
+                    states [
+                        hover when edit-touch.has-hover: {
+                            background: #d5dbdb;
+                        }
+                    ]
+                    
+                    edit-touch := TouchArea { }
+                    
+                    Image {
+                        source: @image-url("../../images/themes/default/mActionToggleEditing.svg");
+                        width: 20px;
+                        height: 20px;
+                        x: (parent.width - self.width) / 2;
+                        y: (parent.height - self.height) / 2;
+                    }
+                }
+                
+                Rectangle { horizontal-stretch: 1; }
+            }
+            
+            // Linha divisória
+            Rectangle {
+                y: parent.height - self.height;
+                height: 1px;
+                background: #bdc3c7;
+            }
+        }
+        
+        // Lista de camadas
+        ScrollView {
+            vertical-stretch: 1;
+            
+            VerticalLayout {
+                padding: 8px;
+                spacing: 4px;
+                
+                for layer in ["Pontos de Interesse", "Vias", "Polígonos", "Mapa Base", "Imagem Satélite"]: Rectangle {
+                    height: 36px;
+                    border-radius: 4px;
+                    
+                    states [
+                        hover when layer-touch.has-hover: {
+                            background: #e8f4f8;
+                        }
+                    ]
+                    
+                    layer-touch := TouchArea { }
+                    
+                    HorizontalLayout {
+                        padding-left: 8px;
+                        padding-right: 8px;
+                        spacing: 8px;
+                        
+                        Image {
+                            source: @image-url("../../images/themes/default/mIconPolygonLayer.svg");
+                            width: 18px;
+                            height: 18px;
+                        }
+                        
+                        Text {
+                            text: layer;
+                            color: #2c3e50;
+                            font-size: 13px;
+                            vertical-alignment: center;
+                            horizontal-stretch: 1;
+                        }
+                        
+                        // Checkbox de visibilidade
+                        Image {
+                            source: @image-url("../../images/themes/default/mActionShowAllLayers.svg");
+                            width: 16px;
+                            height: 16px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+// Conteúdo da aba "Propriedades"
+component PropertiesTabContent inherits Rectangle {
+    background: #ffffff;
+    
+    ScrollView {
+        VerticalLayout {
+            padding: 16px;
+            spacing: 12px;
+            
+            Text {
+                text: "Propriedades do Objeto";
+                font-size: 14px;
+                font-weight: 600;
+                color: #2c3e50;
+            }
+            
+            Rectangle {
+                height: 1px;
+                background: #ecf0f1;
+            }
+            
+            // Propriedade ID
+            VerticalLayout {
+                spacing: 4px;
+                
+                Text {
+                    text: "ID:";
+                    font-size: 12px;
+                    color: #7f8c8d;
+                }
+                
+                Rectangle {
+                    height: 32px;
+                    background: #ecf0f1;
+                    border-radius: 4px;
+                    
+                    Text {
+                        text: "12345";
+                        color: #2c3e50;
+                        font-size: 13px;
+                        vertical-alignment: center;
+                        x: 8px;
+                    }
+                }
+            }
+            
+            // Propriedade Nome
+            VerticalLayout {
+                spacing: 4px;
+                
+                Text {
+                    text: "Nome:";
+                    font-size: 12px;
+                    color: #7f8c8d;
+                }
+                
+                Rectangle {
+                    height: 32px;
+                    background: #ecf0f1;
+                    border-radius: 4px;
+                    
+                    Text {
+                        text: "Objeto Exemplo";
+                        color: #2c3e50;
+                        font-size: 13px;
+                        vertical-alignment: center;
+                        x: 8px;
+                    }
+                }
+            }
+            
+            // Propriedade Tipo
+            VerticalLayout {
+                spacing: 4px;
+                
+                Text {
+                    text: "Tipo:";
+                    font-size: 12px;
+                    color: #7f8c8d;
+                }
+                
+                Rectangle {
+                    height: 32px;
+                    background: #ecf0f1;
+                    border-radius: 4px;
+                    
+                    Text {
+                        text: "Polígono";
+                        color: #2c3e50;
+                        font-size: 13px;
+                        vertical-alignment: center;
+                        x: 8px;
+                    }
+                }
+            }
+        }
+    }
+}
+
+// Conteúdo da aba "Edição"
+component EditTabContent inherits Rectangle {
+    background: #ffffff;
+    
+    ScrollView {
+        VerticalLayout {
+            padding: 16px;
+            spacing: 8px;
+            
+            Text {
+                text: "Ferramentas de Edição";
+                font-size: 14px;
+                font-weight: 600;
+                color: #2c3e50;
+            }
+            
+            Rectangle {
+                height: 1px;
+                background: #ecf0f1;
+            }
+            
+            // Botões de edição
+            for tool in [
+                "Adicionar Vértice",
+                "Remover Vértice",
+                "Mover Vértice",
+                "Dividir Feição",
+                "Mesclar Feições",
+                "Rotacionar Feição",
+                "Simplificar Geometria"
+            ]: Rectangle {
+                height: 40px;
+                border-radius: 4px;
+                background: #ecf0f1;
+                
+                states [
+                    hover when tool-touch.has-hover: {
+                        background: #d5dbdb;
+                    }
+                ]
+                
+                tool-touch := TouchArea { }
+                
+                HorizontalLayout {
+                    padding-left: 12px;
+                    padding-right: 12px;
+                    
+                    Image {
+                        source: @image-url("../../images/themes/default/mActionToggleEditing.svg");
+                        width: 20px;
+                        height: 20px;
+                    }
+                    
+                    Text {
+                        text: tool;
+                        color: #2c3e50;
+                        font-size: 13px;
+                        vertical-alignment: center;
+                        horizontal-stretch: 1;
+                    }
+                }
+            }
+        }
+    }
+}
+
+// Conteúdo genérico para abas extras
+component GenericTabContent inherits Rectangle {
+    in property <string> tab-name;
+    
+    background: #ffffff;
+    
+    VerticalLayout {
+        padding: 24px;
+        spacing: 16px;
+        
+        Image {
+            source: @image-url("../../images/themes/default/mIconFolder.svg");
+            width: 64px;
+            height: 64px;
+            x: (parent.width - self.width) / 2;
+            // Removido colorize para mostrar cor real do ícone
+        }
+        
+        Text {
+            text: root.tab-name;
+            font-size: 16px;
+            font-weight: 600;
+            color: #2c3e50;
+            horizontal-alignment: center;
+        }
+        
+        Text {
+            text: "Conteúdo em desenvolvimento";
+            font-size: 13px;
+            color: #7f8c8d;
+            horizontal-alignment: center;
+        }
+    }
+}
+
+// Painel lateral principal (Sandwich Menu)
+export component SandwichPanel inherits Rectangle {
+    // Propriedades
+    in-out property <int> active-tab-index: -1; // -1 = minimizado
+    in property <bool> is-expanded: root.active-tab-index >= 0;
+    
+    // Callbacks
+    callback tab-changed(int);
+    
+    // Lista de abas
+    property <[Tab]> tabs: [
+        { id: "layers", title: "Camadas", icon: @image-url("../../images/themes/default/mActionLayers.svg") },
+        { id: "properties", title: "Propriedades", icon: @image-url("../../images/themes/default/mActionPropertiesWidget.svg") },
+        { id: "edit", title: "Edição", icon: @image-url("../../images/themes/default/mActionToggleEditing.svg") },
+        { id: "database", title: "Banco de Dados", icon: @image-url("../../images/themes/default/dbmanager.svg") },
+        { id: "3d", title: "Visualização 3D", icon: @image-url("../../images/themes/default/3d.svg") },
+        { id: "history", title: "Histórico", icon: @image-url("../../images/themes/default/mActionHistory.svg") },
+    ];
+    
+    // Largura animada
+    // TAMANHO: 40px quando minimizado, 340px quando expandido
+    // Mantém proporção com a altura do MenuBar (40px)
+    width: root.is-expanded ? 340px : 40px;
+    background: #2c3e50;
+    
+    // Animação suave da largura
+    animate width {
+        duration: 300ms;
+        easing: cubic-bezier(0.4, 0.0, 0.2, 1);
+    }
+    
+    HorizontalLayout {
+        padding: 0px;
+        spacing: 0px;
+        
+        // Barra de ícones (sempre visível)
+        icon-bar := Rectangle {
+            // TAMANHO: Barra lateral de 40px de largura (alinhada com altura do MenuBar)
+            width: 40px;
+            background: #2c3e50;
+            
+            VerticalLayout {
+                padding: 0px;
+                spacing: 0px;
+                
+                // Botões das abas
+                for tab[index] in root.tabs: TabButton {
+                    icon: tab.icon;
+                    is-active: root.active-tab-index == index;
+                    tooltip: tab.title;
+                    
+                    clicked => {
+                        if (root.active-tab-index == index) {
+                            // Se clicar na aba ativa, minimiza
+                            root.active-tab-index = -1;
+                        } else {
+                            // Senão, ativa a aba
+                            root.active-tab-index = index;
+                        }
+                        root.tab-changed(root.active-tab-index);
+                    }
+                }
+                
+                // Espaço flexível
+                Rectangle {
+                    vertical-stretch: 1;
+                }
+            }
+        }
+        
+        // Conteúdo da aba (visível quando expandido)
+        if root.is-expanded: content-area := Rectangle {
+            width: 300px;
+            background: #ffffff;
+            
+            // Evitar que o conteúdo apareça antes da animação completar
+            opacity: root.is-expanded ? 1.0 : 0.0;
+            
+            animate opacity {
+                duration: 200ms;
+                easing: ease-in-out;
+            }
+            
+            VerticalLayout {
+                padding: 0px;
+                spacing: 0px;
+                
+                // Cabeçalho da aba
+                header := Rectangle {
+                    height: 48px;
+                    background: #34495e;
+                    
+                    HorizontalLayout {
+                        padding-left: 16px;
+                        padding-right: 12px;
+                        spacing: 8px;
+                        
+                        // Título da aba
+                        Text {
+                            text: root.active-tab-index >= 0 && root.active-tab-index < root.tabs.length 
+                                ? root.tabs[root.active-tab-index].title 
+                                : "";
+                            color: #ffffff;
+                            font-size: 15px;
+                            font-weight: 600;
+                            vertical-alignment: center;
+                            horizontal-stretch: 1;
+                        }
+                        
+                        // Botão de minimizar
+                        minimize-btn := Rectangle {
+                            width: 32px;
+                            height: 32px;
+                            border-radius: 4px;
+                            
+                            states [
+                                hover when minimize-touch.has-hover: {
+                                    background: #2c3e50;
+                                }
+                            ]
+                            
+                            minimize-touch := TouchArea {
+                                clicked => {
+                                    root.active-tab-index = -1;
+                                    root.tab-changed(-1);
+                                }
+                            }
+                            
+                            // Ícone de chevron duplo para a esquerda
+                            Image {
+                                source: @image-url("../../images/themes/default/mActionDoubleArrowLeft.svg");
+                                width: 20px;
+                                height: 20px;
+                                x: (parent.width - self.width) / 2;
+                                y: (parent.height - self.height) / 2;
+                                // Removido colorize para mostrar cor real do ícone
+                            }
+                        }
+                    }
+                    
+                    // Linha divisória
+                    Rectangle {
+                        y: parent.height - self.height;
+                        height: 1px;
+                        background: #2c3e50;
+                    }
+                }
+                
+                // Conteúdo da aba selecionada
+                content := Rectangle {
+                    vertical-stretch: 1;
+                    clip: true;
+                    
+                    if root.active-tab-index == 0: LayersTabContent { }
+                    if root.active-tab-index == 1: PropertiesTabContent { }
+                    if root.active-tab-index == 2: EditTabContent { }
+                    if root.active-tab-index == 3: GenericTabContent { tab-name: "Banco de Dados"; }
+                    if root.active-tab-index == 4: GenericTabContent { tab-name: "Visualização 3D"; }
+                    if root.active-tab-index == 5: GenericTabContent { tab-name: "Histórico"; }
+                }
+            }
+            
+            // Sombra direita
+            Rectangle {
+                x: parent.width;
+                width: 4px;
+                height: 100%;
+                background: @linear-gradient(90deg, #00000040 0%, #00000000 100%);
+            }
+        }
+    }
+    
+    // Linha divisória direita
+    Rectangle {
+        x: parent.width - self.width;
+        width: 1px;
+        background: #1a252f;
+    }
+}
+

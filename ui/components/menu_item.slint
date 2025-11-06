@@ -5,9 +5,13 @@ export component MenuItem inherits Rectangle {
     in-out property <bool> submenu-open: false;
     
     callback clicked;
+    callback hover-entered;
     
     width: text-label.preferred-width + 32px;
     height: 40px;
+    
+    // Propriedade para rastrear hover
+    property <bool> is-hovering: touch-area.has-hover;
     
     states [
         open when submenu-open: {
@@ -24,6 +28,13 @@ export component MenuItem inherits Rectangle {
     touch-area := TouchArea {
         clicked => {
             root.clicked();
+        }
+    }
+    
+    // Chamar hover-entered quando entra em hover
+    changed is-hovering => {
+        if root.is-hovering {
+            root.hover-entered();
         }
     }
     

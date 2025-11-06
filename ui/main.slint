@@ -1,9 +1,11 @@
 import { Button, VerticalBox, HorizontalBox } from "std-widgets.slint";
 import { ToolBar } from "components/toolbar.slint";
-import { FloatingLayersPanel } from "components/floating_panel.slint";
 import { StatusBar } from "components/statusbar.slint";
 import { SettingsDialog } from "components/settings.slint";
 import { MenuBar } from "components/menu_bar.slint";
+import { AboutDialog } from "components/about.slint";
+import { AddPluginsDialog } from "components/plugins.slint";
+import { SandwichPanel } from "components/sandwich_panel.slint";
 
 // Exportar SplashScreen para uso no Rust
 export { SplashScreen } from "components/splash.slint";
@@ -19,12 +21,23 @@ export component MainWindow inherits Window {
     
     // Callbacks públicos para serem chamados do Rust
     callback quit-app();
+    
     public function show-settings-dialog() {
         show-settings = true;
     }
     
-    // Estado interno para controlar exibição das configurações
+    public function show-about-dialog() {
+        show-about = true;
+    }
+    
+    public function show-plugins-dialog() {
+        show-plugins = true;
+    }
+    
+    // Estado interno para controlar exibição dos diálogos
     property <bool> show-settings: false;
+    property <bool> show-about: false;
+    property <bool> show-plugins: false;
     
     // Layout principal
     Rectangle {
@@ -43,6 +56,14 @@ export component MainWindow inherits Window {
             menu-settings => {
                 root.show-settings = true;
             }
+            
+            menu-about => {
+                root.show-about = true;
+            }
+            
+            menu-add-plugins => {
+                root.show-plugins = true;
+            }
         }
         
         VerticalLayout {
@@ -50,6 +71,7 @@ export component MainWindow inherits Window {
             spacing: 0px;
             
             // Espaço para o MenuBar
+            // TAMANHO: 40px (altura do MenuBar superior)
             Rectangle {
                 height: 40px;
             }
@@ -118,9 +140,27 @@ export component MainWindow inherits Window {
                 vertical-stretch: 1;
                 spacing: 0px;
                 
+                // Painel lateral sanduíche
+                sandwich-panel := SandwichPanel {
+                    tab-changed(index) => {
+                        debug("Aba alterada: " + index);
+                    }
+                }
+                
+                // Área de conteúdo principal (canvas)
                 Rectangle {
                     background: #ffffff;
                     horizontal-stretch: 1;
+                    
+                    // Texto de placeholder
+                    Text {
+                        text: "Área de Trabalho Principal";
+                        color: #95a5a6;
+                        font-size: 24px;
+                        font-weight: 300;
+                        x: (parent.width - self.width) / 2;
+                        y: (parent.height - self.height) / 2;
+                    }
                 }
             }
             
@@ -133,17 +173,6 @@ export component MainWindow inherits Window {
             }
         }
         
-        // Painel flutuante de camadas (sobreposto na janela)
-        floating-layers := FloatingLayersPanel {
-            layers: [
-                "Camada de Pontos",
-                "Camada de Linhas",
-                "Camada de Polígonos",
-                "Mapa Base",
-                "Imagem de Satélite"
-            ];
-        }
-        
         // Janela de configurações (dialog modal)
         if root.show-settings: settings-dialog := SettingsDialog {
             apply-settings => {
@@ -154,6 +183,32 @@ export component MainWindow inherits Window {
             cancel-settings => {
                 debug("Cancelar configurações");
                 root.show-settings = false;
+            }
+        }
+        
+        // Janela Sobre (dialog modal)
+        if root.show-about: about-dialog := AboutDialog {
+            close => {
+                root.show-about = false;
+            }
+        }
+        
+        // Janela de Complementos (dialog modal)
+        if root.show-plugins: plugins-dialog := AddPluginsDialog {
+            close => {
+                root.show-plugins = false;
+            }
+            
+            install-plugin(index) => {
+                debug("Instalar plugin: " + index);
+            }
+            
+            uninstall-plugin(index) => {
+                debug("Desinstalar plugin: " + index);
+            }
+            
+            search-plugins(query) => {
+                debug("Buscar plugins: " + query);
             }
         }
         

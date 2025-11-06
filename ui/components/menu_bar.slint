@@ -4,11 +4,14 @@ import { SubMenu, SubMenuItem } from "submenu.slint";
 // Componente de barra de menu
 export component MenuBar inherits Rectangle {
     background: #f8f9fa;
+    // TAMANHO: Altura padrão de 40px (referência para outros componentes)
     height: 40px;
     
     // Callbacks para ações do menu
     callback menu-quit();
     callback menu-settings();
+    callback menu-about();
+    callback menu-add-plugins();
     
     // Estados para controlar qual menu está aberto
     property <bool> projeto-open: false;
@@ -16,6 +19,9 @@ export component MenuBar inherits Rectangle {
     property <bool> editar-open: false;
     property <bool> complementos-open: false;
     property <bool> ferramentas-open: false;
+    
+    // Propriedade para saber se algum menu está aberto
+    property <bool> any-menu-open: projeto-open || exibir-open || editar-open || complementos-open || ferramentas-open;
     
     HorizontalLayout {
         padding-left: 12px;
@@ -36,6 +42,16 @@ export component MenuBar inherits Rectangle {
                 root.complementos-open = false;
                 root.ferramentas-open = false;
             }
+            
+            hover-entered => {
+                if root.any-menu-open {
+                    root.projeto-open = true;
+                    root.exibir-open = false;
+                    root.editar-open = false;
+                    root.complementos-open = false;
+                    root.ferramentas-open = false;
+                }
+            }
         }
         
         // Menu Exibir
@@ -50,6 +66,16 @@ export component MenuBar inherits Rectangle {
                 root.editar-open = false;
                 root.complementos-open = false;
                 root.ferramentas-open = false;
+            }
+            
+            hover-entered => {
+                if root.any-menu-open {
+                    root.exibir-open = true;
+                    root.projeto-open = false;
+                    root.editar-open = false;
+                    root.complementos-open = false;
+                    root.ferramentas-open = false;
+                }
             }
         }
         
@@ -66,6 +92,16 @@ export component MenuBar inherits Rectangle {
                 root.complementos-open = false;
                 root.ferramentas-open = false;
             }
+            
+            hover-entered => {
+                if root.any-menu-open {
+                    root.editar-open = true;
+                    root.projeto-open = false;
+                    root.exibir-open = false;
+                    root.complementos-open = false;
+                    root.ferramentas-open = false;
+                }
+            }
         }
         
         // Menu Complementos
@@ -80,6 +116,16 @@ export component MenuBar inherits Rectangle {
                 root.exibir-open = false;
                 root.editar-open = false;
                 root.ferramentas-open = false;
+            }
+            
+            hover-entered => {
+                if root.any-menu-open {
+                    root.complementos-open = true;
+                    root.projeto-open = false;
+                    root.exibir-open = false;
+                    root.editar-open = false;
+                    root.ferramentas-open = false;
+                }
             }
         }
         
@@ -96,12 +142,25 @@ export component MenuBar inherits Rectangle {
                 root.editar-open = false;
                 root.complementos-open = false;
             }
+            
+            hover-entered => {
+                if root.any-menu-open {
+                    root.ferramentas-open = true;
+                    root.projeto-open = false;
+                    root.exibir-open = false;
+                    root.editar-open = false;
+                    root.complementos-open = false;
+                }
+            }
         }
         
         // Menu Sobre
         MenuItem {
             text: "Sobre";
             has-submenu: false;
+            clicked => {
+                root.menu-about();
+            }
         }
     }
     
@@ -255,7 +314,10 @@ export component MenuBar inherits Rectangle {
         
         SubMenuItem {
             text: "Adicionar Complementos";
-            clicked => { root.complementos-open = false; }
+            clicked => { 
+                root.complementos-open = false;
+                root.menu-add-plugins();
+            }
         }
         
         Rectangle {
@@ -265,7 +327,10 @@ export component MenuBar inherits Rectangle {
         
         SubMenuItem {
             text: "Gerenciar Complementos";
-            clicked => { root.complementos-open = false; }
+            clicked => { 
+                root.complementos-open = false;
+                root.menu-add-plugins();
+            }
         }
         
         SubMenuItem {

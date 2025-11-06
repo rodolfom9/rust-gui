@@ -1,0 +1,258 @@
+import { Button, VerticalBox, HorizontalBox, ScrollView } from "std-widgets.slint";
+
+export component AboutDialog inherits Rectangle {
+    callback close();
+    
+    width: 100%;
+    height: 100%;
+    
+    // Overlay semi-transparente
+    background: #00000080;
+    
+    // TouchArea para fechar ao clicar no fundo (deve estar antes do diálogo)
+    TouchArea {
+        width: 100%;
+        height: 100%;
+        clicked => {
+            root.close();
+        }
+    }
+    
+    // Janela do diálogo centralizada
+    dialog-window := Rectangle {
+        width: 600px;
+        height: 500px;
+        x: (parent.width - self.width) / 2;
+        y: (parent.height - self.height) / 2;
+        
+        background: white;
+        border-radius: 8px;
+        drop-shadow-blur: 20px;
+        drop-shadow-color: #00000040;
+        
+        // TouchArea para bloquear cliques no fundo
+        TouchArea {
+            width: 100%;
+            height: 100%;
+        }
+        
+        VerticalLayout {
+            padding: 0px;
+            spacing: 0px;
+            
+            // Header com gradiente
+            header := Rectangle {
+                height: 120px;
+                background: @linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+                border-radius: 8px;
+                
+                VerticalLayout {
+                    padding: 20px;
+                    spacing: 10px;
+                    alignment: center;
+                    
+                    // Logo
+                    Rectangle {
+                        width: 60px;
+                        height: 60px;
+                        background: @linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+                        border-radius: 30px;
+                        drop-shadow-blur: 10px;
+                        drop-shadow-color: #3498db60;
+                        
+                        Rectangle {
+                            width: 40px;
+                            height: 40px;
+                            x: 10px;
+                            y: 10px;
+                            background: white;
+                            border-radius: 6px;
+                        }
+                    }
+                    
+                    Text {
+                        text: "Rust GUI Professional";
+                        font-size: 24px;
+                        font-weight: 700;
+                        color: white;
+                        horizontal-alignment: center;
+                    }
+                }
+            }
+            
+            // Conteúdo
+            ScrollView {
+                vertical-stretch: 1;
+                
+                VerticalLayout {
+                    padding: 30px;
+                    spacing: 20px;
+                    
+                    // Versão
+                    VerticalLayout {
+                        spacing: 5px;
+                        
+                        Text {
+                            text: "Versão 0.1.0 - Master";
+                            font-size: 16px;
+                            font-weight: 600;
+                            color: #2c3e50;
+                            horizontal-alignment: center;
+                        }
+                        
+                        Rectangle {
+                            height: 25px;
+                            HorizontalLayout {
+                                alignment: center;
+                                
+                                Rectangle {
+                                    width: 60px;
+                                    height: 20px;
+                                    background: #5D9933;
+                                    border-radius: 4px;
+                                    
+                                    Text {
+                                        text: "DEV";
+                                        font-size: 11px;
+                                        font-weight: 700;
+                                        color: white;
+                                        horizontal-alignment: center;
+                                        vertical-alignment: center;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    
+                    // Separador
+                    Rectangle {
+                        height: 1px;
+                        background: #ecf0f1;
+                    }
+                    
+                    // Descrição
+                    Text {
+                        text: "Sistema profissional de gerenciamento geográfico desenvolvido em Rust com interface Slint.";
+                        font-size: 14px;
+                        color: #7f8c8d;
+                        horizontal-alignment: center;
+                        wrap: word-wrap;
+                    }
+                    
+                    // Separador
+                    Rectangle {
+                        height: 1px;
+                        background: #ecf0f1;
+                    }
+                    
+                    // Informações técnicas
+                    VerticalLayout {
+                        spacing: 10px;
+                        
+                        HorizontalLayout {
+                            spacing: 10px;
+                            
+                            Text {
+                                text: "Linguagem:";
+                                font-size: 13px;
+                                font-weight: 600;
+                                color: #34495e;
+                                horizontal-stretch: 0;
+                            }
+                            
+                            Text {
+                                text: "Rust 2021 Edition";
+                                font-size: 13px;
+                                color: #7f8c8d;
+                                horizontal-stretch: 1;
+                            }
+                        }
+                        
+                        HorizontalLayout {
+                            spacing: 10px;
+                            
+                            Text {
+                                text: "Interface:";
+                                font-size: 13px;
+                                font-weight: 600;
+                                color: #34495e;
+                                horizontal-stretch: 0;
+                            }
+                            
+                            Text {
+                                text: "Slint 1.14.1";
+                                font-size: 13px;
+                                color: #7f8c8d;
+                                horizontal-stretch: 1;
+                            }
+                        }
+                        
+                        HorizontalLayout {
+                            spacing: 10px;
+                            
+                            Text {
+                                text: "Plataforma:";
+                                font-size: 13px;
+                                font-weight: 600;
+                                color: #34495e;
+                                horizontal-stretch: 0;
+                            }
+                            
+                            Text {
+                                text: "Windows x64";
+                                font-size: 13px;
+                                color: #7f8c8d;
+                                horizontal-stretch: 1;
+                            }
+                        }
+                    }
+                    
+                    // Separador
+                    Rectangle {
+                        height: 1px;
+                        background: #ecf0f1;
+                    }
+                    
+                    // Copyright e licença
+                    VerticalLayout {
+                        spacing: 8px;
+                        
+                        Text {
+                            text: "© 2025 - Rust GUI Professional";
+                            font-size: 12px;
+                            color: #95a5a6;
+                            horizontal-alignment: center;
+                        }
+                        
+                        Text {
+                            text: "Desenvolvido com ❤️ usando Rust & Slint";
+                            font-size: 12px;
+                            color: #95a5a6;
+                            horizontal-alignment: center;
+                        }
+                    }
+                }
+            }
+            
+            // Footer com botão de fechar
+            footer := Rectangle {
+                height: 70px;
+                background: #f8f9fa;
+                border-radius: 8px;
+                
+                HorizontalLayout {
+                    padding: 20px;
+                    alignment: end;
+                    
+                    Button {
+                        text: "Fechar";
+                        primary: true;
+                        clicked => {
+                            root.close();
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

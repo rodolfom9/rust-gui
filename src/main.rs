@@ -83,6 +83,16 @@ fn main() -> Result<(), slint::PlatformError> {
     // Após a splash fechar, criar e executar a janela principal
     let main_window = MainWindow::new()?;
     
+    // Configurar callback para sair da aplicação
+    let main_window_weak = main_window.as_weak();
+    main_window.on_quit_app(move || {
+        if let Some(window) = main_window_weak.upgrade() {
+            window.hide().unwrap();
+            // Força o encerramento do loop de eventos
+            std::process::exit(0);
+        }
+    });
+    
     // Forçar a exibição da janela
     main_window.show()?;
     
