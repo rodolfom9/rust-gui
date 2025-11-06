@@ -8,7 +8,8 @@ export component MenuItem inherits Rectangle {
     callback hover-entered;
     
     width: text-label.preferred-width + 32px;
-    height: 40px;
+    // TAMANHO: Altura reduzida para 36px (alinhado com o MenuBar reduzido)
+    height: 36px;
     
     // Propriedade para rastrear hover
     property <bool> is-hovering: touch-area.has-hover;

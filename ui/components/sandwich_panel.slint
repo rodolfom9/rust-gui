@@ -15,9 +15,9 @@ component TabButton inherits Rectangle {
     
     callback clicked();
     
-    // TAMANHO: 40x40px (alinhado com a altura do MenuBar superior)
-    width: 40px;
-    height: 40px;
+    // TAMANHO: 36x36px (alinhado com a altura do MenuBar reduzido)
+    width: 36px;
+    height: 36px;
     
     states [
         active when root.is-active: {
@@ -434,10 +434,19 @@ export component SandwichPanel inherits Rectangle {
     ];
     
     // Largura animada
-    // TAMANHO: 40px quando minimizado, 340px quando expandido
-    // Mantém proporção com a altura do MenuBar (40px)
-    width: root.is-expanded ? 340px : 40px;
+    // TAMANHO: 36px quando minimizado, 336px quando expandido
+    // Mantém proporção com a altura do MenuBar (36px)
+    width: root.is-expanded ? 336px : 36px;
     background: #2c3e50;
+    // ESTILO: Cantos arredondados (8px de raio)
+    border-radius: 8px;
+    // CLIP: Garante que o conteúdo respeite o border-radius
+    clip: true;
+    // SOMBRA: Sombra suave para destacar do fundo
+    drop-shadow-blur: 8px;
+    drop-shadow-color: #00000030;
+    drop-shadow-offset-x: 2px;
+    drop-shadow-offset-y: 2px;
     
     // Animação suave da largura
     animate width {
@@ -451,9 +460,11 @@ export component SandwichPanel inherits Rectangle {
         
         // Barra de ícones (sempre visível)
         icon-bar := Rectangle {
-            // TAMANHO: Barra lateral de 40px de largura (alinhada com altura do MenuBar)
-            width: 40px;
+            // TAMANHO: Barra lateral de 36px de largura (alinhada com altura do MenuBar reduzido)
+            width: 36px;
             background: #2c3e50;
+            // ESTILO: Cantos arredondados (8px) - aparece quando minimizado
+            border-radius: !root.is-expanded ? 8px : 0px;
             
             VerticalLayout {
                 padding: 0px;
@@ -488,6 +499,10 @@ export component SandwichPanel inherits Rectangle {
         if root.is-expanded: content-area := Rectangle {
             width: 300px;
             background: #ffffff;
+            // ESTILO: Cantos arredondados à direita (8px) - aparece quando expandido
+            border-radius: 8px;
+            // Ajusta o raio apenas nos cantos à direita
+            clip: true;
             
             // Evitar que o conteúdo apareça antes da animação completar
             opacity: root.is-expanded ? 1.0 : 0.0;

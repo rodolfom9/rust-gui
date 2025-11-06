@@ -71,12 +71,13 @@ export component MainWindow inherits Window {
             spacing: 0px;
             
             // Espaço para o MenuBar
-            // TAMANHO: 40px (altura do MenuBar superior)
+            // TAMANHO: 36px (altura do MenuBar superior reduzido)
             Rectangle {
-                height: 40px;
+                height: 36px;
             }
             
             // Toolbar
+            // TAMANHO: 48px (altura definida no componente ToolBar)
             toolbar := ToolBar {
                 new-project => {
                     debug("Novo Projeto");

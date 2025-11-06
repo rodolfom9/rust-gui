@@ -9,13 +9,15 @@ component ToolButton inherits Rectangle {
     width: 36px;
     height: 36px;
     border-radius: 4px;
+    // COR: Fundo transparente, fica visível sobre fundo escuro
+    background: transparent;
     
     states [
         hover when touch-area.has-hover: {
-            background: #e8f4f8;
+            background: #34495e;
         }
         pressed when touch-area.pressed: {
-            background: #d0e8f0;
+            background: #2c3e50;
         }
     ]
     
@@ -35,8 +37,10 @@ component ToolButton inherits Rectangle {
 
 // Toolbar com ações rápidas
 export component ToolBar inherits Rectangle {
-    height: 48px;
-    background: #ffffff;
+    // TAMANHO: 48px (altura padrão da toolbar com botões 36x36px + padding 8px)
+    height: 40px;
+    // COR: Mesma cor do painel sanduíche (#2c3e50)
+    background: #2c3e50;
     
     // Callbacks para ações
     callback new-project();
@@ -55,7 +59,7 @@ export component ToolBar inherits Rectangle {
     callback draw-polygon();
     
     HorizontalLayout {
-        padding: 8px;
+        padding: 3px;
         spacing: 4px;
         
         // Grupo: Arquivo
@@ -78,9 +82,10 @@ export component ToolBar inherits Rectangle {
         }
         
         // Separador: TAMANHO 1px de largura
+        // COR: Mais clara que o fundo para ser visível
         Rectangle {
             width: 1px;
-            background: #e0e0e0;
+            background: #34495e;
             vertical-stretch: 1;
         }
         
@@ -100,7 +105,7 @@ export component ToolBar inherits Rectangle {
         // Separador
         Rectangle {
             width: 1px;
-            background: #e0e0e0;
+            background: #34495e;
             vertical-stretch: 1;
         }
         
@@ -132,7 +137,7 @@ export component ToolBar inherits Rectangle {
         // Separador
         Rectangle {
             width: 1px;
-            background: #e0e0e0;
+            background: #34495e;
             vertical-stretch: 1;
         }
         
@@ -158,7 +163,7 @@ export component ToolBar inherits Rectangle {
         // Separador
         Rectangle {
             width: 1px;
-            background: #e0e0e0;
+            background: #34495e;
             vertical-stretch: 1;
         }
         
@@ -190,7 +195,7 @@ export component ToolBar inherits Rectangle {
         // Separador
         Rectangle {
             width: 1px;
-            background: #e0e0e0;
+            background: #34495e;
             vertical-stretch: 1;
         }
         
