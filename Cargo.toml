@@ -11,6 +11,17 @@ path = "src/main.rs"
 [dependencies]
 slint = { version = "1.14.1", features = ["unstable-winit-030"] }
 
+# Bibliotecas Geoespaciais
+geo = "0.31"                    # Primitivos e algoritmos geoespaciais
+geo-types = "0.7"               # Tipos geoespaciais compartilhados
+shapefile = "0.7"               # Leitura/escrita de shapefiles
+# geos = { version = "10.0", features = ["static", "v3_10_0", "geo"] }  # DESABILITADO: Build complexo no Windows
+# proj = "0.31"                   # DESABILITADO: Requer SQLite3 instalado
+
+# Renderização com Vello
+vello = "0.6.0"                 # Renderizador GPU 2D de alta performance
+wgpu = "0.20.1"                 # API gráfica para Vello (compatível com vello 0.6.0)
+
 [build-dependencies]
 slint-build = "1.14.1"
 
